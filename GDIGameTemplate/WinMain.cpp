@@ -2,9 +2,15 @@
 #include "InputSystem.h"
 #include "RenderSystem.h"
 #include "TimeSystem.h"
+#include "Object.h"
 
 #include <stdio.h>	
 #include <ConsoleApi.h>
+
+#define MAX_ENEMY 10
+
+BoxAirplane g_player;
+BoxAirplane g_enemy[MAX_ENEMY];
 
 // 비주얼 스튜디오가 만든 템플릿은 다른 추가적인 내용이 많아 이해하기 어려워 가장 간단하게 작성함.
 
@@ -61,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
-	bool bUseConsole=true;
+	bool bUseConsole=false;
 	if (bUseConsole)
 	{
 		AllocConsole();
@@ -72,6 +78,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Render::InitRender(hwnd, clientSize.cx, clientSize.cy);
 	Input::InitInput(hwnd, clientSize.cx, clientSize.cy);
 	Time::InitTime();
+
+	g_player.Init(true);
+	for (int i = 0; i < MAX_ENEMY; i++)
+	{
+		g_enemy[i].Init(false);
+	}
 
 	// 대기가 없는 메세지 루프
 	MSG msg;
@@ -125,9 +137,28 @@ void UpdateGame()
 	float deltaTime = Time::GetDeltaTime();
 	Input::Update();
 
-	if (Input::IsTurnDn('A'))
+
+	g_player.m_inputDirX = 0;
+	g_player.m_inputDirY = 0;
+	if (Input::IsCurrDn(VK_LEFT))
 	{
-		std::cout << "A key is pressed" << std::endl;
+		g_player.m_inputDirX = -1;
+	}
+	else if (Input::IsCurrDn(VK_RIGHT))
+	{
+		g_player.m_inputDirX = 1;
+	}
+	if (Input::IsCurrDn(VK_UP))
+	{
+		g_player.m_inputDirY = -1;
+	}
+	else if (Input::IsCurrDn(VK_DOWN))
+	{
+		g_player.m_inputDirY = 1;
+	}
+	if (Input::IsTurnDn('O'))
+	{
+		std::cout << g_player.m_posX << ' ' << g_player.m_posY << std::endl;
 	}
 	if (Input::IsCurrDn(VK_LBUTTON))
 	{
@@ -135,13 +166,36 @@ void UpdateGame()
 		std::cout << pt.x << ' ' << pt.y << std::endl;
 	}
 	if (Input::IsTurnDn('T'))
-	{			
+	{
 		std::cout << deltaTime << std::endl;
 	}
+
+	// 위치 갱신
+	g_player.Update(deltaTime);
+	for (int i = 0; i < MAX_ENEMY; i++)
+	{
+		g_enemy[i].Update(deltaTime);
+	}
+
+	//충돌확인
+	for (int i = 0; i < MAX_ENEMY; i++)
+	{
+		if (g_enemy[i].m_isDead == false)
+		{
+			if (g_player.Collide(g_enemy[i]))
+			{
+				g_enemy[i].m_isDead = true;
+			}			
+		}
+	}		
 }
 void RenderGame()
 {
 	Render::BeginDraw();
-	Render::DrawRect(100, 100, 200, 200, RGB(255, 0, 0));
+	g_player.Render();
+	for (int i = 0; i < MAX_ENEMY; i++)
+	{
+		g_enemy[i].Render();
+	}
 	Render::EndDraw();
 }

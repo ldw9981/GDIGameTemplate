@@ -135,4 +135,12 @@ namespace Render
 		TextOutA(backMemDC, x, y, text, (int)strlen(text));
 	}
 
+	SIZE GetScreenSize()
+	{
+		SIZE size;
+		size.cx = nWidth;
+		size.cy = nHeight;
+
+		return size;
+	}
 }
