@@ -122,7 +122,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 void UpdateGame()
 {
 	Time::UpdateTime();
-
 	float deltaTime = Time::GetDeltaTime();
 	Input::Update();
 
@@ -135,8 +134,8 @@ void UpdateGame()
 		POINT pt = Input::GetMouseClient();
 		std::cout << pt.x << ' ' << pt.y << std::endl;
 	}
-	if (Input::IsTurnUp('T'))
-	{
+	if (Input::IsTurnDn('T'))
+	{			
 		std::cout << deltaTime << std::endl;
 	}
 }
