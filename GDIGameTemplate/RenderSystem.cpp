@@ -28,7 +28,7 @@ namespace render
 
 	void ClearScreen()
 	{
-		::PatBlt(backMemDC, 0, 0, nWidth, nHeight, WHITENESS);
+		::PatBlt(backMemDC, 0, 0, nWidth, nHeight, BLACKNESS);
 	}
 
 	void BeginDraw()

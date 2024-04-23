@@ -1,6 +1,9 @@
-#include <Windows.h>
+#include "stdafx.h"
 #include "InputSystem.h"
 #include "RenderSystem.h"
+
+#include <stdio.h>	
+#include <ConsoleApi.h>
 
 // 비주얼 스튜디오가 만든 템플릿은 다른 추가적인 내용이 많아 이해하기 어려워 가장 간단하게 작성함.
 
@@ -43,7 +46,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		L"간단한 윈도우",
 		WS_OVERLAPPEDWINDOW,	// OR연산으로 조합된 윈도우창 스타일
 		0,0,	// 시작위치
-		clientSize.cx, clientSize.cy, // 너비, 높이
+		clientRect.right-clientRect.left,  clientRect.bottom - clientRect.top , // 너비, 높이
 		NULL, NULL, hInstance, NULL
 	);
 
@@ -56,6 +59,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// 윈도우 표시
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
+
+	bool bUseConsole=true;
+	if (bUseConsole)
+	{
+		AllocConsole();
+		FILE* _tempFile;
+		freopen_s(&_tempFile, "CONOUT$", "w", stdout);
+	}	
 
 	render::InitRender(hwnd, clientSize.cx, clientSize.cy);
 	input::InitInput(hwnd, clientSize.cx, clientSize.cy);
@@ -77,7 +88,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		else
 		{
 			// 게임 루프
-			input::UpdateMouse();
+			input::Update();
 			Update();
 			Render();
 		}
@@ -85,7 +96,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	input::ReleaseInput();
 	render::ReleaseRender();
-	
+	if (bUseConsole)
+	{
+		FreeConsole();
+	}
 
 	return static_cast<int>(msg.wParam);
 }
@@ -106,7 +120,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 void Update()
 {
-
+	if (input::IsTurnDn('A'))
+	{
+		std::cout << "A key is pressed" << std::endl;
+	}
+	if (input::IsCurrDn(VK_LBUTTON))
+	{
+		POINT pt = input::GetMouseClient();
+		std::cout << pt.x << ' ' << pt.y << std::endl;
+	}
 }
 void Render()
 {
