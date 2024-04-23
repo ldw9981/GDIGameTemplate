@@ -3,7 +3,7 @@
 
 #pragma comment(lib, "msimg32.lib")
 
-namespace render
+namespace Render
 {
 	HWND hWnd;
 	int nWidth;

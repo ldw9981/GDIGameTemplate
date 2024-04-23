@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "InputSystem.h"
 
-namespace input
+namespace Input
 {
 	// 키보드 입력 관련 변수
 	#define KEYBOARD_MAX 256		// 전체 가상 키의 수  https://learn.microsoft.com/ko-kr/windows/win32/inputdev/virtual-key-codes
@@ -22,7 +22,7 @@ namespace input
 		ScreenToClient(hWnd, &mouseClient);
 	
 		// 키보드 상태 갱신
-		GetKeyboardState((PBYTE)&g_byKeyCurr);	// 0x80 : 눌림, 0x00 : 눌리지 않음
+		bool ret = GetKeyboardState((PBYTE)&g_byKeyCurr);	// 0x80 : 눌림, 0x00 : 눌리지 않음
 		
 		for (int i = 0; i < KEYBOARD_MAX; i++)
 		{

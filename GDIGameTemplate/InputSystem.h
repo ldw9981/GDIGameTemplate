@@ -1,6 +1,6 @@
 #pragma once
 
-namespace input
+namespace Input
 {
 	void InitInput(HWND hWindow,int width,int height);
 	void ReleaseInput();

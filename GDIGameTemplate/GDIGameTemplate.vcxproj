@@ -128,13 +128,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TimeSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

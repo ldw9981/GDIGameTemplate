@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "InputSystem.h"
 #include "RenderSystem.h"
+#include "TimeSystem.h"
 
 #include <stdio.h>	
 #include <ConsoleApi.h>
@@ -9,8 +10,8 @@
 
 // 윈도우 프로시저 함수 선언
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-void Update();
-void Render();
+void UpdateGame();
+void RenderGame();
 
 // 프로젝트 속성 -> 링커 -> 시스템 -> 하위 시스템 -> Windows로 변경
 // 진입점 함수 정의
@@ -68,9 +69,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		freopen_s(&_tempFile, "CONOUT$", "w", stdout);
 	}	
 
-	render::InitRender(hwnd, clientSize.cx, clientSize.cy);
-	input::InitInput(hwnd, clientSize.cx, clientSize.cy);
-		
+	Render::InitRender(hwnd, clientSize.cx, clientSize.cy);
+	Input::InitInput(hwnd, clientSize.cx, clientSize.cy);
+	Time::InitTime();
+
 	// 대기가 없는 메세지 루프
 	MSG msg;
 	while (true)
@@ -87,15 +89,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		else
 		{
-			// 게임 루프
-			input::Update();
-			Update();
-			Render();
+			// 게임 루프					
+			UpdateGame();
+			RenderGame();
 		}
 	}
 
-	input::ReleaseInput();
-	render::ReleaseRender();
+	Input::ReleaseInput();
+	Render::ReleaseRender();
 	if (bUseConsole)
 	{
 		FreeConsole();
@@ -118,21 +119,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void Update()
+void UpdateGame()
 {
-	if (input::IsTurnDn('A'))
+	Time::UpdateTime();
+	Input::Update();
+
+	if (Input::IsTurnDn('A'))
 	{
 		std::cout << "A key is pressed" << std::endl;
 	}
-	if (input::IsCurrDn(VK_LBUTTON))
+	if (Input::IsCurrDn(VK_LBUTTON))
 	{
-		POINT pt = input::GetMouseClient();
+		POINT pt = Input::GetMouseClient();
 		std::cout << pt.x << ' ' << pt.y << std::endl;
 	}
 }
-void Render()
+void RenderGame()
 {
-	render::BeginDraw();
-	render::DrawRect(100, 100, 200, 200, RGB(255, 0, 0));
-	render::EndDraw();
+	Render::BeginDraw();
+	Render::DrawRect(100, 100, 200, 200, RGB(255, 0, 0));
+	Render::EndDraw();
 }

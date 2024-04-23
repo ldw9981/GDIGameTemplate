@@ -1,6 +1,6 @@
 #pragma once
 
-namespace render
+namespace Render
 {
 	void InitRender(HWND hWindow,int witdh,int height);
 
