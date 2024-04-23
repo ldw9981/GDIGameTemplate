@@ -13,6 +13,8 @@ struct Player
 	float x, y;
 	float speed;
 	float dirX, dirY;
+
+	void Update();
 };
 
 struct Bullet

@@ -3,11 +3,6 @@
 namespace Time
 {
 	void InitTime();
-
 	void UpdateTime();
-
-	const float GetFrameRate();
-
-	const ULONGLONG GetDeltaTime();
-
+	float GetDeltaTime();
 }
