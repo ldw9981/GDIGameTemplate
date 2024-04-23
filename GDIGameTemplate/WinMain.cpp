@@ -1,5 +1,6 @@
 #include <Windows.h>
-#include "Input.h"
+#include "InputSystem.h"
+#include "RenderSystem.h"
 
 // 비주얼 스튜디오가 만든 템플릿은 다른 추가적인 내용이 많아 이해하기 어려워 가장 간단하게 작성함.
 
@@ -31,8 +32,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	// 원하는 크기가 조정되어 리턴
-	RECT rcClientSize = { 0, 0, 800, 600 };
-	AdjustWindowRect(&rcClientSize, WS_OVERLAPPEDWINDOW, FALSE);
+	SIZE clientSize = { 800, 600 };
+	RECT clientRect = { 0, 0, clientSize.cx, clientSize.cy };
+	AdjustWindowRect(&clientRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	// 윈도우 생성
 	HWND hwnd = CreateWindowEx(
@@ -41,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		L"간단한 윈도우",
 		WS_OVERLAPPEDWINDOW,	// OR연산으로 조합된 윈도우창 스타일
 		0,0,	// 시작위치
-		rcClientSize.right - rcClientSize.left, rcClientSize.bottom - rcClientSize.top, // 너비, 높이
+		clientSize.cx, clientSize.cy, // 너비, 높이
 		NULL, NULL, hInstance, NULL
 	);
 
@@ -55,6 +57,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
+	render::InitRender(hwnd, clientSize.cx, clientSize.cy);
+	input::InitInput(hwnd, clientSize.cx, clientSize.cy);
+		
 	// 대기가 없는 메세지 루프
 	MSG msg;
 	while (true)
@@ -72,11 +77,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		else
 		{
 			// 게임 루프
-			InputUpdate();
+			input::UpdateMouse();
 			Update();
 			Render();
 		}
 	}
+
+	input::ReleaseInput();
+	render::ReleaseRender();
+	
+
 	return static_cast<int>(msg.wParam);
 }
 
@@ -100,5 +110,7 @@ void Update()
 }
 void Render()
 {
-
+	render::BeginDraw();
+	render::DrawRect(100, 100, 200, 200, RGB(255, 0, 0));
+	render::EndDraw();
 }
