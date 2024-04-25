@@ -11,7 +11,7 @@
 
 BoxAirplane g_player;
 BoxAirplane g_enemy[MAX_ENEMY];
-
+bool g_Reverse = false;
 // 비주얼 스튜디오가 만든 템플릿은 다른 추가적인 내용이 많아 이해하기 어려워 가장 간단하게 작성함.
 
 // 윈도우 프로시저 함수 선언
@@ -42,7 +42,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	// 원하는 크기가 조정되어 리턴
-	SIZE clientSize = { 800, 600 };
+	SIZE clientSize = { 1920, 1280 };
 	RECT clientRect = { 0, 0, clientSize.cx, clientSize.cy };
 	AdjustWindowRect(&clientRect, WS_OVERLAPPEDWINDOW, FALSE);
 
@@ -78,6 +78,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Render::InitRender(hwnd, clientSize.cx, clientSize.cy);
 	Input::InitInput(hwnd, clientSize.cx, clientSize.cy);
 	Time::InitTime();
+	
 
 	g_player.Init(true);
 	for (int i = 0; i < MAX_ENEMY; i++)
@@ -169,6 +170,11 @@ void UpdateGame()
 	{
 		std::cout << deltaTime << std::endl;
 	}
+	if (Input::IsTurnDn('R'))
+	{
+		g_Reverse = !g_Reverse;
+	}
+	
 
 	// 위치 갱신
 	g_player.Update(deltaTime);
@@ -192,6 +198,7 @@ void UpdateGame()
 void RenderGame()
 {
 	Render::BeginDraw();
+	Render::DrawTestBitmap(g_Reverse);
 	g_player.Render();
 	for (int i = 0; i < MAX_ENEMY; i++)
 	{

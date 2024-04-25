@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "RenderSystem.h"
 
+
 #pragma comment(lib, "msimg32.lib")
+#pragma comment(lib, "gdiplus.lib")
+
 
 namespace Render
 {
@@ -12,6 +15,10 @@ namespace Render
 	HDC backMemDC;    // 뒷면 DC
 
 	HBITMAP backBitmap = nullptr;
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR gdiplusToken;
+	Gdiplus::Bitmap* bitmap = nullptr;
+
 
 	void InitRender(HWND hWindow,int width,int height)
 	{
@@ -20,22 +27,20 @@ namespace Render
 		nHeight = height;
 
 		frontMemDC = GetDC(hWnd);
-
 		backMemDC = CreateCompatibleDC(frontMemDC);
-
 		backBitmap = CreateCompatibleBitmap(frontMemDC, nWidth, nHeight);
-	}
+		::SelectObject(backMemDC, backBitmap);
 
-	void ClearScreen()
-	{
-		::PatBlt(backMemDC, 0, 0, nWidth, nHeight, BLACKNESS);
-	}
+		// GDI+ 초기화
+		Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+		
 
+		bitmap = new Gdiplus::Bitmap(L"../Resource/terry03.bmp");
+	}
+		
 	void BeginDraw()
 	{
-		ClearScreen();
-
-		::SelectObject(backMemDC, backBitmap);
+		::PatBlt(backMemDC, 0, 0, nWidth, nHeight, BLACKNESS);		
 	}
 
 	void EndDraw()
@@ -44,7 +49,9 @@ namespace Render
 	}
 
 	void ReleaseRender()
-	{
+	{			
+		delete bitmap;
+		Gdiplus::GdiplusShutdown(gdiplusToken);
 		DeleteObject(backBitmap);
 
 		DeleteDC(backMemDC);
@@ -143,4 +150,39 @@ namespace Render
 
 		return size;
 	}
+
+	void DrawTestBitmap(bool reverse)
+	{		
+		// 세로축 반전 변환 매트릭스 생성
+		Gdiplus::Graphics graphics(backMemDC);
+
+		Gdiplus::Rect srcRect(50,100, 300 , 300 );
+		Gdiplus::Rect destRect(0, 0, srcRect.Width, srcRect.Height);
+
+		// 이미지 그리기
+		if (reverse)
+		{
+			static Gdiplus::Matrix matrix(-1, 0, 0, 1, srcRect.Width,0);
+			graphics.SetTransform(&matrix);
+		}
+		graphics.DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel);		
+	}
+
+	void DrawBitmap(Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight, bool mirror)
+	{
+		// 세로축 반전 변환 매트릭스 생성
+		Gdiplus::Graphics graphics(backMemDC);
+
+		Gdiplus::Rect srcRect(srcX, srcY, srcWitdh, srcHeight);
+		Gdiplus::Rect destRect(0, 0, srcRect.Width, srcRect.Height);
+
+		// 이미지 그리기
+		if (mirror)
+		{
+			static Gdiplus::Matrix matrix(-1, 0, 0, 1, srcRect.Width, 0);
+			graphics.SetTransform(&matrix);
+		}
+		graphics.DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel);
+	}
+	
 }
