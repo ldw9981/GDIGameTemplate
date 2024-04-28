@@ -16,8 +16,8 @@ namespace Render
 
 	HBITMAP backBitmap = nullptr;
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-	ULONG_PTR gdiplusToken;
-	Gdiplus::Bitmap* bitmap = nullptr;
+	ULONG_PTR gdiplusToken;	
+	Gdiplus::Graphics* graphics=nullptr;
 
 
 	void InitRender(HWND hWindow,int width,int height)
@@ -33,9 +33,7 @@ namespace Render
 
 		// GDI+ 초기화
 		Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-		
-
-		bitmap = new Gdiplus::Bitmap(L"../Resource/terry03.bmp");
+		graphics = Gdiplus::Graphics::FromHDC(backMemDC);			
 	}
 		
 	void BeginDraw()
@@ -49,13 +47,10 @@ namespace Render
 	}
 
 	void ReleaseRender()
-	{			
-		delete bitmap;
+	{	
 		Gdiplus::GdiplusShutdown(gdiplusToken);
 		DeleteObject(backBitmap);
-
 		DeleteDC(backMemDC);
-
 		ReleaseDC(hWnd, frontMemDC);
 	}
 
@@ -151,27 +146,9 @@ namespace Render
 		return size;
 	}
 
-	void DrawTestBitmap(bool reverse)
-	{		
-		// 세로축 반전 변환 매트릭스 생성
-		Gdiplus::Graphics graphics(backMemDC);
-
-		Gdiplus::Rect srcRect(50,100, 300 , 300 );
-		Gdiplus::Rect destRect(0, 0, srcRect.Width, srcRect.Height);
-
-		// 이미지 그리기
-		if (reverse)
-		{
-			static Gdiplus::Matrix matrix(-1, 0, 0, 1, srcRect.Width,0);
-			graphics.SetTransform(&matrix);
-		}
-		graphics.DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel);		
-	}
-
-	void DrawBitmap(Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight, bool mirror)
+	void DrawGDIBitmap(Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight, bool mirror)
 	{
-		// 세로축 반전 변환 매트릭스 생성
-		Gdiplus::Graphics graphics(backMemDC);
+		// 세로축 반전 변환 매트릭스 생성	
 
 		Gdiplus::Rect srcRect(srcX, srcY, srcWitdh, srcHeight);
 		Gdiplus::Rect destRect(0, 0, srcRect.Width, srcRect.Height);
@@ -179,10 +156,15 @@ namespace Render
 		// 이미지 그리기
 		if (mirror)
 		{
-			static Gdiplus::Matrix matrix(-1, 0, 0, 1, srcRect.Width, 0);
-			graphics.SetTransform(&matrix);
+			static Gdiplus::Matrix matrixMirror(-1, 0, 0, 1, srcRect.Width,0);
+			graphics->SetTransform(&matrixMirror);
 		}
-		graphics.DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel);
+		else
+		{			
+			static Gdiplus::Matrix matrixDefault(1, 0, 0, 1, 0, 0);
+			graphics->SetTransform(&matrixDefault);
+		}
+		graphics->DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel);
 	}
 	
 }

@@ -11,13 +11,17 @@
 
 BoxAirplane g_player;
 BoxAirplane g_enemy[MAX_ENEMY];
-bool g_Reverse = false;
+Gdiplus::Bitmap* gdiBitmapPlayer = nullptr;
+
+bool g_Mirror = false;
 // 비주얼 스튜디오가 만든 템플릿은 다른 추가적인 내용이 많아 이해하기 어려워 가장 간단하게 작성함.
 
 // 윈도우 프로시저 함수 선언
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void UpdateGame();
 void RenderGame();
+void LoadResource();
+void ReleaseResource();
 
 // 프로젝트 속성 -> 링커 -> 시스템 -> 하위 시스템 -> Windows로 변경
 // 진입점 함수 정의
@@ -78,7 +82,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Render::InitRender(hwnd, clientSize.cx, clientSize.cy);
 	Input::InitInput(hwnd, clientSize.cx, clientSize.cy);
 	Time::InitTime();
-	
+	LoadResource();
 
 	g_player.Init(true);
 	for (int i = 0; i < MAX_ENEMY; i++)
@@ -108,6 +112,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 	}
 
+	ReleaseResource();
 	Input::ReleaseInput();
 	Render::ReleaseRender();
 	if (bUseConsole)
@@ -172,7 +177,7 @@ void UpdateGame()
 	}
 	if (Input::IsTurnDn('R'))
 	{
-		g_Reverse = !g_Reverse;
+		g_Mirror = !g_Mirror;
 	}
 	
 
@@ -198,11 +203,21 @@ void UpdateGame()
 void RenderGame()
 {
 	Render::BeginDraw();
-	Render::DrawTestBitmap(g_Reverse);
+	Render::DrawGDIBitmap(gdiBitmapPlayer,0,100,300,300, g_Mirror);
 	g_player.Render();
 	for (int i = 0; i < MAX_ENEMY; i++)
 	{
 		g_enemy[i].Render();
 	}
 	Render::EndDraw();
+}
+
+void LoadResource()
+{
+	gdiBitmapPlayer = new Gdiplus::Bitmap(L"../Resource/Terry03.bmp");
+}
+
+void ReleaseResource()
+{
+	delete gdiBitmapPlayer;
 }
