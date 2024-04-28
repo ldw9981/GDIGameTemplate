@@ -146,16 +146,15 @@ namespace Render
 		return size;
 	}
 
-	void DrawGDIBitmap(Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight, bool mirror)
+	void DrawGDIBitmap(int x, int y,Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight, bool mirror)
 	{
-		// 세로축 반전 변환 매트릭스 생성	
+		if (bitmap == nullptr)
+			return;
 
-		Gdiplus::Rect srcRect(srcX, srcY, srcWitdh, srcHeight);
-		Gdiplus::Rect destRect(0, 0, srcRect.Width, srcRect.Height);
-
-		// 이미지 그리기
-		if (mirror)
-		{
+		Gdiplus::Rect srcRect(srcX, srcY, srcWitdh, srcHeight); // 소스의 영역
+		Gdiplus::Rect destRect(x, y,  srcRect.Width, srcRect.Height); // 화면에 그릴 영역
+		if (mirror)	//	Y 축 대칭 인가?
+		{	
 			static Gdiplus::Matrix matrixMirror(-1, 0, 0, 1, srcRect.Width,0);
 			graphics->SetTransform(&matrixMirror);
 		}
@@ -164,6 +163,7 @@ namespace Render
 			static Gdiplus::Matrix matrixDefault(1, 0, 0, 1, 0, 0);
 			graphics->SetTransform(&matrixDefault);
 		}
+		// 이미지 그리기
 		graphics->DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel);
 	}
 	

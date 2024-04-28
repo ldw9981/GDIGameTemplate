@@ -203,7 +203,7 @@ void UpdateGame()
 void RenderGame()
 {
 	Render::BeginDraw();
-	Render::DrawGDIBitmap(gdiBitmapPlayer,0,100,300,300, g_Mirror);
+	Render::DrawGDIBitmap(g_player.m_posX, g_player.m_posY, gdiBitmapPlayer,0,100,300,300, g_Mirror);
 	g_player.Render();
 	for (int i = 0; i < MAX_ENEMY; i++)
 	{
