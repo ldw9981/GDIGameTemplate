@@ -5,9 +5,6 @@
 #include "Object.h"
 #include "AnimationResource.h"
 
-#include <stdio.h>	
-#include <ConsoleApi.h>
-
 
 #define MAX_ENEMY 10
 
@@ -15,6 +12,7 @@ Object g_player;
 Object g_enemy[MAX_ENEMY];
 
 AnimationResource g_PlayerAnim;
+Gdiplus::Bitmap* gdiBitmapPlayer = nullptr;
 
 bool g_Mirror = false;
 // 비주얼 스튜디오가 만든 템플릿은 다른 추가적인 내용이 많아 이해하기 어려워 가장 간단하게 작성함.
@@ -208,7 +206,7 @@ void UpdateGame()
 void RenderGame()
 {
 	Render::BeginDraw();
-	
+	Render::DrawGDIBitmap(300,300,gdiBitmapPlayer, 0, 100, 300, 300, g_Mirror);
 	g_player.Render();
 	for (int i = 0; i < MAX_ENEMY; i++)
 	{
@@ -219,7 +217,7 @@ void RenderGame()
 
 void LoadResource()
 {
-	
+	gdiBitmapPlayer = new Gdiplus::Bitmap(L"../Resource/Ken.png");
 	g_PlayerAnim.LoadAnimImage(L"../Resource/Ken.png");
 	g_PlayerAnim.LoadAnimMotion(L"../Resource/KenIdle.txt");
 	g_PlayerAnim.LoadAnimMotion(L"../Resource/KenMove.txt");
@@ -228,5 +226,5 @@ void LoadResource()
 
 void ReleaseResource()
 {
-	
+	delete gdiBitmapPlayer;
 }
