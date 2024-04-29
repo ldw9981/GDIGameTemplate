@@ -9,8 +9,8 @@
 
 #define MAX_ENEMY 10
 
-BoxAirplane g_player;
-BoxAirplane g_enemy[MAX_ENEMY];
+Object g_player;
+Object g_enemy[MAX_ENEMY];
 Gdiplus::Bitmap* gdiBitmapPlayer = nullptr;
 
 bool g_Mirror = false;

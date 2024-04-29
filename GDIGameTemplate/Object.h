@@ -1,7 +1,7 @@
 #pragma once
 
 
-struct BoxAirplane
+struct Object
 {
 	bool m_player = true; 
 	bool m_isDead = false;
@@ -17,7 +17,6 @@ struct BoxAirplane
 	void Init(bool player);
 	void Update(float delta);
 	void Render();
-	bool Collide(const BoxAirplane& other);
+	bool Collide(const Object& other);
 };
-
 
