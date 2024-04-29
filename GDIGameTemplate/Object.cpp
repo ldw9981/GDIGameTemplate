@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Object.h"
 #include "RenderSystem.h"
+#include "AnimationResource.h"
 
 void Object::Init(bool player)
 {
@@ -42,6 +43,14 @@ void Object::Update(float delta)
 	m_posX += m_moveDirX * m_speed * delta;
 	m_posY += m_moveDirY * m_speed * delta;	
 
+	if (m_moveDirX != 0.0f)
+	{
+		if (m_moveDirX > 0)
+			m_Mirror = false;
+		else
+			m_Mirror = true;
+	}
+
 
 	// 화면 밖으로 나가지 않도록 처리
 	SIZE size = Render::GetScreenSize();
@@ -54,12 +63,43 @@ void Object::Update(float delta)
 		m_posY = 0;
 	else if (m_posY > size.cy)
 		m_posY = (float)size.cy;
+
+
+	if (m_pAnim && m_MotionIndex != -1)
+	{
+		m_AnimationAccTime += delta;
+		if (m_AnimationAccTime >= 0.1f)
+		{
+			m_AnimationAccTime -= 0.1f;
+			m_FrameIndex++;
+			if (m_FrameIndex >= m_pAnim->m_motions[m_MotionIndex].FrameCount)
+			{
+				m_FrameIndex = 0;
+			}			
+		}
+	}
 }
 
 void Object::Render()
 {
 	if(m_isDead)
 		return;
+
+	
+	if (m_pAnim && m_MotionIndex != -1)
+	{
+		Frame& frame = m_pAnim->m_motions[m_MotionIndex].Frames[m_FrameIndex];
+		Gdiplus::Bitmap* bitmap = m_pAnim->m_bitmap;
+		SIZE size = Render::GetScreenSize();
+		int x = (int)m_posX - frame.CenterX;
+		int y = (int)m_posY - frame.CenterY;
+		int srcX = frame.Source.left;
+		int srcY = frame.Source.top;
+		int srcWidth = frame.Source.right - frame.Source.left;
+		int srcHeight = frame.Source.bottom - frame.Source.top;
+		Render::DrawGDIBitmap(x, y, bitmap, srcX, srcY, srcWidth, srcHeight, m_Mirror);
+	}
+	
 
 	Render::DrawRect((int)m_posX - m_colliderSize.cx / 2, (int)m_posY - m_colliderSize.cy / 2,
 		(int)m_colliderSize.cx, (int)m_colliderSize.cy, m_color);
@@ -75,5 +115,16 @@ bool Object::Collide(const Object& other)
 		return true;
 	}	
 	return false;
+}
+
+void Object::SetMotion(int index)
+{
+	if (m_pAnim == nullptr)
+		return;
+
+	assert(m_pAnim->m_motionCount > index);
+	m_MotionIndex = index;
+	m_FrameIndex = 0;
+	m_AnimationAccTime = 0.0f;
 }
 

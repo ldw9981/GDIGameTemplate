@@ -155,12 +155,12 @@ namespace Render
 		Gdiplus::Rect destRect(x, y,  srcRect.Width, srcRect.Height); // 화면에 그릴 영역
 		if (mirror)	//	Y 축 대칭 인가?
 		{	
-			static Gdiplus::Matrix matrixMirror(-1, 0, 0, 1,(float) srcRect.Width,0);
+			Gdiplus::Matrix matrixMirror(-1, 0, 0, 1,(float) srcRect.Width,0);
 			graphics->SetTransform(&matrixMirror);
 		}
 		else
 		{			
-			static Gdiplus::Matrix matrixDefault(1, 0, 0, 1, 0, 0);
+			Gdiplus::Matrix matrixDefault(1, 0, 0, 1, 0, 0);
 			graphics->SetTransform(&matrixDefault);
 		}
 		// 이미지 그리기
