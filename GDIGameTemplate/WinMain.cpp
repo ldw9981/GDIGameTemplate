@@ -87,6 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	g_player.Init(true);
 	g_player.SetMotion(0);
+	g_player.m_pAnimationResource = g_PlayerAnim;
 
 	for (int i = 0; i < MAX_ENEMY; i++)
 	{
@@ -222,7 +223,7 @@ void LoadResource()
 	g_PlayerAnim->LoadAnimImage(L"../Resource/Ken.png");
 	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenIdle.txt");
 	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenMove.txt");
-	g_player.m_pAnimationResource = g_PlayerAnim;
+	
 }
 
 void ReleaseResource()
