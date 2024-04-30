@@ -12,11 +12,11 @@ struct Object
 	SIZE  m_colliderSize ={ 50,50 };
 	COLORREF m_color = RGB(255,255,255);
 
-	AnimationResource* m_pAnim = nullptr;	
+	AnimationResource* m_pAnimationResource = nullptr;	
 	int m_MotionIndex = -1;
 	int m_FrameIndex = 0;
 	float m_AnimationAccTime = 0.0f;
-	bool m_Mirror = false;
+	bool m_Flip = false;
 
 	void Init(bool player);
 	void Update(float delta);

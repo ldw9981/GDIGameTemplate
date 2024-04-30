@@ -146,25 +146,17 @@ namespace Render
 		return size;
 	}
 
-	void DrawGDIBitmap(int x, int y,Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight, bool mirror)
+	void DrawGDIBitmap(int x, int y,Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight)
 	{
 		if (bitmap == nullptr)
 			return;
 
 		Gdiplus::Rect srcRect(srcX, srcY, srcWitdh, srcHeight); // 소스의 영역
-		Gdiplus::Rect destRect(0, 0,  srcRect.Width, srcRect.Height); // 화면에 그릴 영역
-		if (mirror)	//	Y 축 대칭 인가?
-		{	
-			Gdiplus::Matrix matrixMirror(-1, 0, 0, 1, x+(float) srcRect.Width,y);
-			graphics->SetTransform(&matrixMirror);
-		}
-		else
-		{			
-			Gdiplus::Matrix matrixDefault(1, 0, 0, 1, x, y);
-			graphics->SetTransform(&matrixDefault);
-		}
+		Gdiplus::Rect destRect(x, y,  srcRect.Width, srcRect.Height); // 화면에 그릴 영역		
 		// 이미지 그리기
 		graphics->DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel);
+
+		
 	}
 	
 }

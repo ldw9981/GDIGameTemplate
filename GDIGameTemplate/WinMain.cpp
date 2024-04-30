@@ -11,8 +11,8 @@
 Object g_player;
 Object g_enemy[MAX_ENEMY];
 
-AnimationResource g_PlayerAnim;
-Gdiplus::Bitmap* gdiBitmapPlayer = nullptr;
+AnimationResource* g_PlayerAnim;
+
 
 bool g_Mirror = false;
 // 비주얼 스튜디오가 만든 템플릿은 다른 추가적인 내용이 많아 이해하기 어려워 가장 간단하게 작성함.
@@ -72,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
-	bool bUseConsole=false;
+	bool bUseConsole=true;
 	if (bUseConsole)
 	{
 		AllocConsole();
@@ -206,7 +206,7 @@ void UpdateGame()
 void RenderGame()
 {
 	Render::BeginDraw();
-	Render::DrawGDIBitmap(300,300,gdiBitmapPlayer, 0, 100, 300, 300, g_Mirror);
+	
 	g_player.Render();
 	for (int i = 0; i < MAX_ENEMY; i++)
 	{
@@ -217,14 +217,15 @@ void RenderGame()
 
 void LoadResource()
 {
-	gdiBitmapPlayer = new Gdiplus::Bitmap(L"../Resource/Ken.png");
-	g_PlayerAnim.LoadAnimImage(L"../Resource/Ken.png");
-	g_PlayerAnim.LoadAnimMotion(L"../Resource/KenIdle.txt");
-	g_PlayerAnim.LoadAnimMotion(L"../Resource/KenMove.txt");
-	g_player.m_pAnim = &g_PlayerAnim;
+	g_PlayerAnim = new AnimationResource;
+
+	g_PlayerAnim->LoadAnimImage(L"../Resource/Ken.png");
+	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenIdle.txt");
+	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenMove.txt");
+	g_player.m_pAnimationResource = g_PlayerAnim;
 }
 
 void ReleaseResource()
 {
-	delete gdiBitmapPlayer;
+	delete g_PlayerAnim;
 }
