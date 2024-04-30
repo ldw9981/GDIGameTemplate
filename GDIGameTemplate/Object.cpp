@@ -46,9 +46,9 @@ void Object::Update(float delta)
 	if (m_moveDirX != 0.0f)
 	{
 		if (m_moveDirX > 0)
-			m_Flip = false;
+			m_AnimationFlip = false;
 		else
-			m_Flip = true;
+			m_AnimationFlip = true;
 	}
 
 
@@ -65,16 +65,16 @@ void Object::Update(float delta)
 		m_posY = (float)size.cy;
 
 
-	if (m_pAnimationResource && m_MotionIndex != -1)
+	if (m_pAnimationResource && m_AnimationMotionIndex != -1)
 	{
 		m_AnimationAccTime += delta;
 		if (m_AnimationAccTime >= 0.1f)
 		{
 			m_AnimationAccTime -= 0.1f;
-			m_FrameIndex++;
-			if (m_FrameIndex >= m_pAnimationResource->m_motions[m_MotionIndex].FrameCount)
+			m_AnimationFrameIndex++;
+			if (m_AnimationFrameIndex >= m_pAnimationResource->m_motions[m_AnimationMotionIndex].FrameCount)
 			{
-				m_FrameIndex = 0;
+				m_AnimationFrameIndex = 0;
 			}			
 		}
 	}
@@ -86,15 +86,15 @@ void Object::Render()
 		return;
 	
 	// 애니메이션 리소스가 있고 특정 모션이 설정되어 있으면 해당 프레임을 그린다.
-	if (m_pAnimationResource && m_MotionIndex != -1)
+	if (m_pAnimationResource && m_AnimationMotionIndex != -1)
 	{
-		Frame& frame = m_pAnimationResource->m_motions[m_MotionIndex].Frames[m_FrameIndex];
-		Gdiplus::Bitmap* bitmap = m_Flip ? m_pAnimationResource->m_bitmapFlip : m_pAnimationResource->m_bitmap;
+		Frame& frame = m_pAnimationResource->m_motions[m_AnimationMotionIndex].Frames[m_AnimationFrameIndex];
+		Gdiplus::Bitmap* bitmap = m_AnimationFlip ? m_pAnimationResource->m_bitmapFlip : m_pAnimationResource->m_bitmap;
 		SIZE size = Render::GetScreenSize();
 		
-		int x = m_Flip ? (int)m_posX - (frame.Size.cx - frame.CenterX) : (int)m_posX - frame.CenterX;
+		int x = m_AnimationFlip ? (int)m_posX - (frame.Size.cx - frame.CenterX) : (int)m_posX - frame.CenterX;
 		int y = (int)m_posY - frame.CenterY;
-		int srcX = m_Flip ? m_pAnimationResource->m_bitmapFlip->GetWidth() - frame.Size.cx - frame.Source.left : frame.Source.left;
+		int srcX = m_AnimationFlip ? m_pAnimationResource->m_bitmapFlip->GetWidth() - frame.Size.cx - frame.Source.left : frame.Source.left;
 		int srcY = frame.Source.top;
 	
 		Render::DrawGDIBitmap(x, y, bitmap, srcX, srcY, frame.Size.cx, frame.Size.cy);		
@@ -123,8 +123,8 @@ void Object::SetMotion(int index)
 		return;
 
 	assert(m_pAnimationResource->m_motionCount > index);
-	m_MotionIndex = index;
-	m_FrameIndex = 0;
+	m_AnimationMotionIndex = index;
+	m_AnimationFrameIndex = 0;
 	m_AnimationAccTime = 0.0f;
 }
 

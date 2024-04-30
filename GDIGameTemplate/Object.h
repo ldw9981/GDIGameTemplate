@@ -1,5 +1,11 @@
 #pragma once
 
+enum ObjectStatus {
+	OBJECT_STATUS_IDLE,
+	OBJECT_STATUS_MOVE,
+	OBJECT_STATUS_ATTACK
+};
+
 struct AnimationResource;
 struct Object
 {
@@ -13,10 +19,10 @@ struct Object
 	COLORREF m_color = RGB(255,255,255);
 
 	AnimationResource* m_pAnimationResource = nullptr;	
-	int m_MotionIndex = -1;
-	int m_FrameIndex = 0;
+	int m_AnimationMotionIndex = -1;
+	int m_AnimationFrameIndex = 0;
 	float m_AnimationAccTime = 0.0f;
-	bool m_Flip = false;
+	bool m_AnimationFlip = false;
 
 	void Init(bool player);
 	void Update(float delta);
