@@ -222,9 +222,9 @@ void LoadResource()
 	g_PlayerAnim = new AnimationResource;
 
 	g_PlayerAnim->LoadAnimImage(L"../Resource/Ken.png");
-	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenIdle.txt");
-	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenMove.txt");
-	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenAttack.txt",false);
+	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenIdle.txt");				 //	OBJECT_STATUS_IDLE,
+	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenMove.txt");				 //	OBJECT_STATUS_MOVE,
+	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenAttack.txt", false);		 //	OBJECT_STATUS_ATTACK
 
 }
 

@@ -17,6 +17,7 @@ struct Object
 	float m_inputDirX=0.0f,m_inputDirY=0.0f;	// ภิทย บคลอ
 	SIZE  m_colliderSize ={ 50,50 };
 	COLORREF m_color = RGB(255,255,255);
+	ObjectStatus m_status = OBJECT_STATUS_IDLE;
 
 	AnimationResource* m_pAnimationResource = nullptr;	
 	int m_AnimationMotionIndex = -1;
