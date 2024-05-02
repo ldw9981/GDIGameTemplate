@@ -5,3 +5,4 @@
 #include <assert.h>
 #include <stdio.h>	
 #include <ConsoleApi.h>
+#include <algorithm>

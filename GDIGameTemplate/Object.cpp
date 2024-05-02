@@ -68,15 +68,8 @@ void Object::Update(float delta)
 
 	// 화면 밖으로 나가지 않도록 처리
 	SIZE size = Render::GetScreenSize();
-	if (m_posX < 0)
-		m_posX = 0;
-	else if (m_posX > size.cx)
-		m_posX = (float)size.cx;
-	
-	if (m_posY < 0)
-		m_posY = 0;
-	else if (m_posY > size.cy)
-		m_posY = (float)size.cy;
+	m_posX = std::clamp(m_posX, 0.0f, (float)size.cx);	// 프로젝트 설정에서 C++17로 변경해야 사용가능
+	m_posY = std::clamp(m_posY, 0.0f, (float)size.cy);
 
 	if (m_pAnimationResource && m_AnimationMotionIndex != -1)
 		UpdateAnimation(delta);
@@ -91,6 +84,9 @@ void Object::Render()
 	if(m_isDead)
 		return;
 	
+	Render::DrawRect((int)m_posX - m_colliderSize.cx / 2, (int)m_posY - m_colliderSize.cy / 2,
+		(int)m_colliderSize.cx, (int)m_colliderSize.cy, m_color);
+
 	// 애니메이션 리소스가 있고 특정 모션이 설정되어 있으면 해당 프레임을 그린다.
 	if (m_pAnimationResource && m_AnimationMotionIndex != -1)
 	{
@@ -103,12 +99,8 @@ void Object::Render()
 		int srcX = m_AnimationFlip ? m_pAnimationResource->m_bitmapFlip->GetWidth() - frame.Size.cx - frame.Source.left : frame.Source.left;
 		int srcY = frame.Source.top;
 	
-		Render::DrawGDIBitmap(x, y, bitmap, srcX, srcY, frame.Size.cx, frame.Size.cy);		
+		Render::DrawImage(x, y, bitmap, srcX, srcY, frame.Size.cx, frame.Size.cy);		
 	}
-	
-
-	Render::DrawRect((int)m_posX - m_colliderSize.cx / 2, (int)m_posY - m_colliderSize.cy / 2,
-		(int)m_colliderSize.cx, (int)m_colliderSize.cy, m_color);
 }
 
 bool Object::Collide(const Object& other)

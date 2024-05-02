@@ -23,5 +23,5 @@ namespace Render
 	void DrawFont(int x, int y, const char* text, COLORREF color, int fontSize, const wchar_t* fontName, int fontStyle);
 	SIZE GetScreenSize();
 
-	void DrawGDIBitmap(int x, int y,Gdiplus::Bitmap* bitmap,int srcX, int srcY, int srcWitdh, int srcHeight);
+	void DrawImage(int x, int y,Gdiplus::Bitmap* bitmap,int srcX, int srcY, int srcWitdh, int srcHeight);
 }

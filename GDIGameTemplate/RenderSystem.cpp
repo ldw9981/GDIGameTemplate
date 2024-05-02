@@ -147,7 +147,7 @@ namespace Render
 	}
 
 	//bitmap은 GdiplusShutdown 하기전에 해제해야함
-	void DrawGDIBitmap(int x, int y,Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight)
+	void DrawImage(int x, int y,Gdiplus::Bitmap* bitmap,int srcX,int srcY,int srcWitdh,int srcHeight)
 	{
 		if (bitmap == nullptr)
 			return;
