@@ -14,6 +14,9 @@ AnimationResource::~AnimationResource()
 	if (m_bitmapFlip)
 		delete m_bitmapFlip;
 }
+
+// 지원 파일 포맷 목록 BMP,GIF, JPEG, PNG, TIFF, EXIF
+// https://learn.microsoft.com/ko-kr/windows/win32/gdiplus/-gdiplus-types-of-bitmaps-about
 void AnimationResource::LoadAnimImage(const WCHAR* fileName)
 {
     m_fileName = fileName;
