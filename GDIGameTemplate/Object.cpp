@@ -3,6 +3,8 @@
 #include "RenderSystem.h"
 #include "AnimationResource.h"
 
+#define ANIMATION_DELAY 0.05f
+
 void Object::Init(bool player)
 {
 	m_player = player;
@@ -45,10 +47,22 @@ void Object::Update(float delta)
 
 	if (m_moveDirX != 0.0f)
 	{
-		if (m_moveDirX > 0)
-			m_AnimationFlip = false;
-		else
-			m_AnimationFlip = true;
+		m_AnimationFlip = m_moveDirX < 0 ? true : false;
+	}
+
+	//공격 중이면 상태	변경하지 않는다.
+	if (m_status != ObjectStatus::OBJECT_STATUS_ATTACK) 
+	{
+		if (m_moveDirXPrev == 0.0f && m_moveDirYPrev == 0.0f)
+		{
+			if (m_moveDirX != 0.0f || m_moveDirY != 0.0f)
+				ChangeStatus(ObjectStatus::OBJECT_STATUS_MOVE);
+		}
+		else if (m_moveDirXPrev != 0.0f || m_moveDirYPrev != 0.0f)
+		{
+			if (m_moveDirX == 0.0f && m_moveDirY == 0.0f)
+				ChangeStatus(ObjectStatus::OBJECT_STATUS_IDLE);
+		}
 	}
 
 
@@ -66,6 +80,10 @@ void Object::Update(float delta)
 
 	if (m_pAnimationResource && m_AnimationMotionIndex != -1)
 		UpdateAnimation(delta);
+
+	// 이전 방향 벡터 저장
+	m_moveDirXPrev = m_moveDirX;
+	m_moveDirYPrev = m_moveDirY;
 }
 
 void Object::Render()
@@ -121,16 +139,17 @@ void Object::UpdateAnimation(float delta)
 	int frameCount = m_pAnimationResource->m_motions[m_AnimationMotionIndex].FrameCount;
 	bool isLoop = m_pAnimationResource->m_motions[m_AnimationMotionIndex].IsLoop;
 
+	// 누적된 시간으로 보여줄 프레임 찾기
 	m_AnimationAccTime += delta;
-	while (m_AnimationFrameIndex < frameCount)
+	while (m_AnimationAccTime > ANIMATION_DELAY)
 	{
-		if (m_AnimationAccTime < 0.05f)
-			break;
-
-		m_AnimationAccTime -= 0.05f;
-		m_AnimationFrameIndex++;
+		m_AnimationAccTime -= ANIMATION_DELAY;
+	
+		if(m_AnimationFrameIndex < frameCount)
+			m_AnimationFrameIndex++;
 	}
 
+	// 끝 프레임 넘어갔을때 처리
 	if (m_AnimationFrameIndex >= frameCount)
 	{
 		if (isLoop)
@@ -139,11 +158,49 @@ void Object::UpdateAnimation(float delta)
 		}
 		else
 		{					
-			if (m_AnimationMotionIndex == ObjectStatus::OBJECT_STATUS_ATTACK)
-				SetMotion(ObjectStatus::OBJECT_STATUS_IDLE);
+			if (m_status == ObjectStatus::OBJECT_STATUS_ATTACK)
+				ChangeStatus(ObjectStatus::OBJECT_STATUS_IDLE);
 		}
 	}
 }
+
+void Object::ChangeStatus(ObjectStatus status)
+{
+	if (m_status == status)
+		return;
+
+	// End 이전 상태를 끝내면서 처리할 내용을 작성
+	switch (m_status)
+	{
+	case OBJECT_STATUS_IDLE:
+		break;	
+	case OBJECT_STATUS_MOVE:
+		break;
+	case OBJECT_STATUS_ATTACK:
+		break;
+	default:
+		break;
+	}
+
+
+	m_status = status;
+
+	// Begin 새로운 상태가 시작될때 처리할 내용을 작성
+	switch (m_status)
+	{
+	case ObjectStatus::OBJECT_STATUS_IDLE:
+		SetMotion(ObjectStatus::OBJECT_STATUS_IDLE);
+		break;
+	case ObjectStatus::OBJECT_STATUS_MOVE:
+		SetMotion(ObjectStatus::OBJECT_STATUS_MOVE);
+		break;
+	case ObjectStatus::OBJECT_STATUS_ATTACK:
+		SetMotion(ObjectStatus::OBJECT_STATUS_ATTACK);
+		break;
+	}
+}
+
+
 
 
 

@@ -14,6 +14,8 @@ struct Object
 	float m_posX=0.0f, m_posY=0.0f;			// 현재 위치	
 	float m_speed = 500.0f;						// 이동 가능한 속력
 	float m_moveDirX=0.0f, m_moveDirY=0.0f;		// 방향 벡터
+	float m_moveDirXPrev = 0.0f, m_moveDirYPrev = 0.0f;		// 이전 방향 벡터
+
 	float m_inputDirX=0.0f,m_inputDirY=0.0f;	// 입력 벡터
 	SIZE  m_colliderSize ={ 50,50 };
 	COLORREF m_color = RGB(255,255,255);
@@ -31,5 +33,7 @@ struct Object
 	bool Collide(const Object& other);
 	void SetMotion(int index);
 	void UpdateAnimation(float delta);	
+	void ChangeStatus(ObjectStatus status);
+	void UpdateStatus(float delta);
 };
 

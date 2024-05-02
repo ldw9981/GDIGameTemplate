@@ -72,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
-	bool bUseConsole=true;
+	bool bUseConsole=false;
 	if (bUseConsole)
 	{
 		AllocConsole();
@@ -182,7 +182,7 @@ void UpdateGame()
 	}
 	if (Input::IsTurnDn(VK_SPACE))
 	{
-		g_player.SetMotion(ObjectStatus::OBJECT_STATUS_ATTACK);
+		g_player.ChangeStatus(ObjectStatus::OBJECT_STATUS_ATTACK);
 	}
 	
 
