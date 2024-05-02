@@ -34,6 +34,5 @@ struct Object
 	void SetMotion(int index);
 	void UpdateAnimation(float delta);	
 	void ChangeStatus(ObjectStatus status);
-	void UpdateStatus(float delta);
 };
 

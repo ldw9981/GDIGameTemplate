@@ -113,10 +113,14 @@ void Object::Render()
 
 bool Object::Collide(const Object& other)
 {
-	if (m_posX < other.m_posX + other.m_colliderSize.cx &&
-		m_posX + m_colliderSize.cx > other.m_posX &&
-		m_posY < other.m_posY + other.m_colliderSize.cy &&
-		m_posY + m_colliderSize.cy > other.m_posY)
+	RECT rc = { (LONG)m_posX - m_colliderSize.cx / 2, (LONG)m_posY - m_colliderSize.cy / 2,
+			(LONG)m_posX + m_colliderSize.cx / 2, (LONG)m_posY + m_colliderSize.cy / 2 };
+
+	RECT rcOther = { (LONG)other.m_posX - other.m_colliderSize.cx / 2, (LONG)other.m_posY - other.m_colliderSize.cy / 2,
+				(LONG)other.m_posX + other.m_colliderSize.cx / 2, (LONG)other.m_posY + other.m_colliderSize.cy / 2 };
+	
+	RECT rcIntersect;
+	if (::IntersectRect(&rcIntersect,&rc,&rcOther))
 	{	
 		return true;
 	}	
