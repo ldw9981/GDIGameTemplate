@@ -10,7 +10,7 @@ struct Frame
 
 struct Motion 
 {
-	Frame Frames[10];		// 프레임 컨테이너
+	Frame Frames[20];		// 프레임 컨테이너
 	int FrameCount=0;			// 전체 프레임 수
 	bool IsLoop = false;	// 반복 여부
 };

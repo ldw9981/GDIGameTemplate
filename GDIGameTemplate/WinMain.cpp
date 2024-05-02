@@ -180,9 +180,9 @@ void UpdateGame()
 	{
 		std::cout << deltaTime << std::endl;
 	}
-	if (Input::IsTurnDn('R'))
+	if (Input::IsTurnDn(VK_SPACE))
 	{
-		g_Mirror = !g_Mirror;
+		g_player.SetMotion(ObjectStatus::OBJECT_STATUS_ATTACK);
 	}
 	
 

@@ -29,7 +29,7 @@ void Object::Init(bool player)
 
 void Object::Update(float delta)
 {
-	// 입력 벡터를 방향 벡터로 변환
+	// 입력 벡터를 Normalize 하여  방향 벡터로 변환
 	if(m_inputDirX != 0.0f)
 		m_moveDirX = m_inputDirX / sqrt(m_inputDirX* m_inputDirX + m_inputDirY * m_inputDirY);
 	else
@@ -64,20 +64,8 @@ void Object::Update(float delta)
 	else if (m_posY > size.cy)
 		m_posY = (float)size.cy;
 
-
 	if (m_pAnimationResource && m_AnimationMotionIndex != -1)
-	{
-		m_AnimationAccTime += delta;
-		if (m_AnimationAccTime >= 0.1f)
-		{
-			m_AnimationAccTime -= 0.1f;
-			m_AnimationFrameIndex++;
-			if (m_AnimationFrameIndex >= m_pAnimationResource->m_motions[m_AnimationMotionIndex].FrameCount)
-			{
-				m_AnimationFrameIndex = 0;
-			}			
-		}
-	}
+		UpdateAnimation(delta);
 }
 
 void Object::Render()
@@ -127,4 +115,35 @@ void Object::SetMotion(int index)
 	m_AnimationFrameIndex = 0;
 	m_AnimationAccTime = 0.0f;
 }
+
+void Object::UpdateAnimation(float delta)
+{
+	int frameCount = m_pAnimationResource->m_motions[m_AnimationMotionIndex].FrameCount;
+	bool isLoop = m_pAnimationResource->m_motions[m_AnimationMotionIndex].IsLoop;
+
+	m_AnimationAccTime += delta;
+	while (m_AnimationFrameIndex < frameCount)
+	{
+		if (m_AnimationAccTime < 0.05f)
+			break;
+
+		m_AnimationAccTime -= 0.05f;
+		m_AnimationFrameIndex++;
+	}
+
+	if (m_AnimationFrameIndex >= frameCount)
+	{
+		if (isLoop)
+		{
+			m_AnimationFrameIndex = 0;
+		}
+		else
+		{					
+			if (m_AnimationMotionIndex == ObjectStatus::OBJECT_STATUS_ATTACK)
+				SetMotion(ObjectStatus::OBJECT_STATUS_IDLE);
+		}
+	}
+}
+
+
 
