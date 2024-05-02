@@ -18,6 +18,7 @@ namespace Render
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;	
 	Gdiplus::Graphics* graphics=nullptr;
+	// https://learn.microsoft.com/ko-kr/windows/win32/gdiplus/-gdiplus-about-gdi--about
 
 
 	void InitRender(HWND hWindow,int width,int height)
