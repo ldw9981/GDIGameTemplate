@@ -14,8 +14,8 @@ struct Vector2
 	}
 	void Normalize()
 	{
-		float length = sqrt(x*x + y*y);
-		x /= length;
+		float length = sqrt(x*x + y*y);	// 피타고라스 정리를 이용하여 벡터의 길이(0,0 부터의 거리)를 구한다.
+		x /= length;	// 길이로 나누어 길이 1에 해당되는 x,y 성분을 구한다. 
 		y /= length;
 	}
 
