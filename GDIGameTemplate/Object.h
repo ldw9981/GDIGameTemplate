@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector2.h"
 
 enum ObjectStatus {
 	OBJECT_STATUS_IDLE,
@@ -11,12 +12,13 @@ struct Object
 {
 	bool m_player = true; 
 	bool m_isDead = false;
-	float m_posX=0.0f, m_posY=0.0f;			// 현재 위치	
+	float m_posX=0.0f, m_posY=0.0f;				// 현재 위치	
 	float m_speed = 500.0f;						// 이동 가능한 속력
-	float m_moveDirX=0.0f, m_moveDirY=0.0f;		// 방향 벡터
-	float m_moveDirXPrev = 0.0f, m_moveDirYPrev = 0.0f;		// 이전 방향 벡터
 
-	float m_inputDirX=0.0f,m_inputDirY=0.0f;	// 입력 벡터
+	Vector2 m_moveDir = { 0.0f,0.0f };			// 현재의 방향 벡터
+	Vector2 m_moveDirPrev = { 0.0f,0.0f };		// 이전의 방향 벡터
+	Vector2 m_inputDir;							// 입력 벡터
+
 	SIZE  m_colliderSize ={ 50,50 };
 	COLORREF m_color = RGB(255,255,255);
 	ObjectStatus m_status = OBJECT_STATUS_IDLE;
