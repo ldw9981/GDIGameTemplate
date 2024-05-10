@@ -37,8 +37,8 @@ void Object::Update(float delta)
 	{
 		m_moveDir = Vector2(0.0f, 0.0f);
 	}	
-	m_posX += m_moveDir.x * m_speed * delta;
-	m_posY += m_moveDir.y * m_speed * delta;	
+	m_posX += m_moveDir.x * m_speedPerSec * delta;
+	m_posY += m_moveDir.y * m_speedPerSec * delta;	
 	SIZE size = Render::GetScreenSize();
 	m_posX = std::clamp(m_posX, 0.0f, (float)size.cx);	
 	m_posY = std::clamp(m_posY, 0.0f, (float)size.cy);	

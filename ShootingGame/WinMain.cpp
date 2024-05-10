@@ -1,19 +1,11 @@
 #include "stdafx.h"
-#include "System.h"
-#include "Object.h"
 
-#define MAX_ENEMY 10
+#include "Game.h"
 
-Object g_player;
-Object g_enemy[MAX_ENEMY];
+
 SIZE g_ClientSize = { 1280, 960 };
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-void GameUpdate();
-void GameRender();
-void GameInitialize(HWND hwnd);
-void GameUninitialize();
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	WNDCLASSEX wc = { 0 };
@@ -47,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
-	GameInitialize(hwnd);
+	Game::Initialize(hwnd, g_ClientSize.cx, g_ClientSize.cy);
 
 	MSG msg;
 	while (true)
@@ -62,13 +54,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		else
 		{					
-			GameUpdate();
-			GameRender();
+			Game::Update();
+			Game::Render();
 		}
 	}
-
-	GameUninitialize();
-
+	Game::Uninitialize();
 	
 	return static_cast<int>(msg.wParam);
 }
@@ -85,82 +75,4 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
 	return 0;
-}
-
-void GameInitialize(HWND hwnd)
-{
-	Render::InitRender(hwnd, g_ClientSize.cx, g_ClientSize.cy);
-	Input::InitInput(hwnd, g_ClientSize.cx, g_ClientSize.cy);
-	Time::InitTime();
-
-	g_player.Init(true);
-
-	for (int i = 0; i < MAX_ENEMY; i++)
-	{
-		g_enemy[i].Init(false);
-	}
-}
-
-void GameUpdate()
-{
-	Time::UpdateTime();
-	float deltaTime = Time::GetDeltaTime();
-	Input::Update();
-
-
-	g_player.m_inputDir.Set(0.0f,0.0f);
-	if (Input::IsCurrDn(VK_LEFT))
-	{
-		g_player.m_inputDir.x = -1;
-	}
-	else if (Input::IsCurrDn(VK_RIGHT))
-	{
-		g_player.m_inputDir.x = 1;
-	}
-	if (Input::IsCurrDn(VK_UP))
-	{
-		g_player.m_inputDir.y = -1;
-	}
-	else if (Input::IsCurrDn(VK_DOWN))
-	{
-		g_player.m_inputDir.y = 1;
-	}
-	
-
-	// 위치 갱신
-	g_player.Update(deltaTime);
-	for (int i = 0; i < MAX_ENEMY; i++)
-	{
-		g_enemy[i].Update(deltaTime);
-	}
-
-	//충돌확인
-	for (int i = 0; i < MAX_ENEMY; i++)
-	{
-		if (g_enemy[i].m_isDead == false)
-		{
-			if (g_player.Collide(g_enemy[i]))
-			{
-				g_enemy[i].m_isDead = true;
-			}			
-		}
-	}		
-}
-void GameRender()
-{
-	Render::BeginDraw();
-	
-	g_player.Render();
-	for (int i = 0; i < MAX_ENEMY; i++)
-	{
-		g_enemy[i].Render();
-	}
-	Render::EndDraw();
-}
-
-
-void GameUninitialize()
-{
-	Input::ReleaseInput();
-	Render::ReleaseRender();
 }
