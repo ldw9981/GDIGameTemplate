@@ -10,14 +10,14 @@ namespace Game
 	const int MAX_ENEMY = 10;
 	Object g_player;
 	Object g_enemy[MAX_ENEMY];
-	//List<Object> g_enemyContainer;
+	List<Object> g_enemyContainer;
 
 
 	void Initialize(HWND hwnd,int witdh,int height)
 	{
-		Render::InitRender(hwnd, witdh, height);
-		Input::InitInput(hwnd, witdh, height);
-		Time::InitTime();
+		Render::Initialize(hwnd, witdh, height);
+		Input::Initialize(hwnd, witdh, height);
+		Time::Initialize();
 
 		g_player.Init(true);
 
@@ -87,8 +87,8 @@ namespace Game
 
 	void Uninitialize()
 	{
-		Input::ReleaseInput();
-		Render::ReleaseRender();
+		Input::Uninitialize();
+		Render::Uninitialize();
 	}
 
 }

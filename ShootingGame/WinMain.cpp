@@ -59,11 +59,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 	}
 	Game::Uninitialize();
-	
 	return static_cast<int>(msg.wParam);
 }
 
-// 윈도우 프로시저 함수 정의
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)

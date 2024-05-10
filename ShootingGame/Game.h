@@ -6,5 +6,4 @@ namespace Game
 	void Render();
 	void Initialize(HWND hwnd,int width,int height);
 	void Uninitialize();
-
 } 

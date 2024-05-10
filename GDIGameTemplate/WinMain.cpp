@@ -119,7 +119,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	ReleaseResource();
 	Input::ReleaseInput();
-	Render::ReleaseRender();
+	Render::Release();
 	if (bUseConsole)
 	{
 		FreeConsole();

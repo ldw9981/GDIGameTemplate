@@ -47,7 +47,7 @@ namespace Render
 		::BitBlt(frontMemDC, 0, 0, nWidth, nHeight, backMemDC, 0, 0, SRCCOPY);
 	}
 
-	void ReleaseRender()
+	void Release()
 	{	
 		Gdiplus::GdiplusShutdown(gdiplusToken);
 		DeleteObject(backBitmap);

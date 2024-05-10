@@ -35,7 +35,7 @@ namespace Input
 		memcpy(&g_byKeyPrev, &g_byKeyCurr, KEYBOARD_MAX);
 	}
 
-	void InitInput(HWND hWindow, int width, int height)
+	void Initialize(HWND hWindow, int width, int height)
 	{
 		hWnd = hWindow;
 		nWidth = width;
@@ -46,7 +46,7 @@ namespace Input
 		SetCursorPos(mouseClient.x, mouseClient.y);
 	}
 
-	void ReleaseInput()
+	void Uninitialize()
 	{
 
 	}
@@ -100,7 +100,7 @@ namespace Render
 	HDC frontMemDC;    
 	HDC backMemDC;    
 	HBITMAP backBitmap = nullptr;	
-	void InitRender(HWND hWindow, int width, int height)
+	void Initialize(HWND hWindow, int width, int height)
 	{
 		hWnd = hWindow;
 		nWidth = width;
@@ -118,7 +118,7 @@ namespace Render
 	{
 		::BitBlt(frontMemDC, 0, 0, nWidth, nHeight, backMemDC, 0, 0, SRCCOPY);
 	}
-	void ReleaseRender()
+	void Uninitialize()
 	{		
 		DeleteObject(backBitmap);
 		DeleteDC(backMemDC);
@@ -169,7 +169,7 @@ namespace Time
 	LARGE_INTEGER prevCounter;
 	LARGE_INTEGER currentCounter;
 	float deltaTime;
-	void InitTime()
+	void Initialize()
 	{
 		QueryPerformanceFrequency(&frequency);	
 		QueryPerformanceCounter(&prevCounter); 
