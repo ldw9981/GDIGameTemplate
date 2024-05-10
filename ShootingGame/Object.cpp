@@ -21,14 +21,13 @@ void Object::Init(bool player)
 			
 
 	 m_isDead = false;
-	 m_moveDir.Set(0.0f,0.0f);		// 방향 벡터
-	 m_moveDirPrev.Set(0.0f,0.0f);	// 이전 방향 벡터
-	 m_inputDir.Set(0.0f,0.0f);		// 입력 벡터	
+	 m_moveDir.Set(0.0f,0.0f);		
+	 m_moveDirPrev.Set(0.0f,0.0f);	
+	 m_inputDir.Set(0.0f,0.0f);		
 }
 
 void Object::Update(float delta)
-{
-	// 입력 벡터를 Normalize 하여  방향 벡터로 변환
+{	
 	if (m_inputDir != Vector2(0.0f, 0.0f))
 	{
 		m_inputDir.Normalize();
@@ -38,17 +37,11 @@ void Object::Update(float delta)
 	{
 		m_moveDir = Vector2(0.0f, 0.0f);
 	}	
-
 	m_posX += m_moveDir.x * m_speed * delta;
 	m_posY += m_moveDir.y * m_speed * delta;	
-
-
-	// 화면 밖으로 나가지 않도록 처리
 	SIZE size = Render::GetScreenSize();
-	m_posX = std::clamp(m_posX, 0.0f, (float)size.cx);	// 프로젝트 설정에서 C++17로 변경해야 사용가능
-	m_posY = std::clamp(m_posY, 0.0f, (float)size.cy);
-
-	// 이전 방향 벡터 저장
+	m_posX = std::clamp(m_posX, 0.0f, (float)size.cx);	
+	m_posY = std::clamp(m_posY, 0.0f, (float)size.cy);	
 	m_moveDirPrev = m_moveDir;
 }
 

@@ -12,25 +12,17 @@ struct Vector2
 		this->x = x;
 		this->y = y;
 	}
-	/*		   x,y
-	  |		    +  	
-	  |         
-	  |	       
-	 -+---------->
-	 0,0	   
-	*/
 	void Normalize()
-	{	// 피타고라스 정리를 이용하여 벡터의 길이(0,0 -> x,y 까지의 거리)를 구한다.
+	{	
 		float length = sqrt(x*x + y*y);	
-		x /= length;	// 길이로 나누어 길이 1에 해당되는 x,y 성분을 구한다.  
-		y /= length;	//  즉 벡터의 크기가 1인 순수한 방향을 나타내는 벡터가 된다.
+		x /= length;	
+		y /= length;	
 	}
 
 	float Length()
 	{
 		return sqrt(x*x + y*y);
 	}
-	// a + b;
 	Vector2 operator+(const Vector2& v)
 	{
 		return Vector2(x + v.x, y + v.y);
@@ -47,7 +39,6 @@ struct Vector2
 	{
 		return Vector2(x / f, y / f);
 	}
-	//  a += b;
 	Vector2& operator+=(const Vector2& v)
 	{
 		x += v.x;
