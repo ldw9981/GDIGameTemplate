@@ -24,4 +24,6 @@ namespace Render
 	SIZE GetScreenSize();
 
 	void DrawImage(int x, int y,Gdiplus::Bitmap* bitmap,int srcX, int srcY, int srcWitdh, int srcHeight);
+
+	void SetColorScale(float r,float g,float b,float a);
 }

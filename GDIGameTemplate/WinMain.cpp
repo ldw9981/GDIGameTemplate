@@ -184,6 +184,12 @@ void UpdateGame()
 		g_player.ChangeStatus(ObjectStatus::OBJECT_STATUS_ATTACK);
 	}
 	
+	if (Input::IsTurnDn('1'))
+	{
+		Render::SetColorScale(1.0f, 1.0f, 1.0f,0.1f);
+	}
+
+
 
 	// 위치 갱신
 	g_player.Update(deltaTime);

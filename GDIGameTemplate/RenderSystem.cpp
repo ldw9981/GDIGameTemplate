@@ -160,5 +160,19 @@ namespace Render
 
 		
 	}
+
+	void SetColorScale(float r, float g, float b, float a)
+	{
+		Gdiplus::ImageAttributes imageAttr;
+
+		Gdiplus::ColorMatrix colorMatrix = {
+			r, 0.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, g, 0.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, b, 0.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, a, 0.0f,
+			0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+
+		imageAttr.SetColorMatrix(&colorMatrix);
+	}
 	
 }
