@@ -11,7 +11,7 @@ public:
 
 	Vector2 m_moveDir = { 0.0f,0.0f };
 	Vector2 m_moveDirPrev = { 0.0f,0.0f };
-	Vector2 m_inputDir;
+	Vector2 m_input;
 
 	SIZE  m_colliderSize ={ 50,50 };
 	COLORREF m_color = RGB(255,255,255);

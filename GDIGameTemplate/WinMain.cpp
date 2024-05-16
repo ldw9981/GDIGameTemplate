@@ -149,22 +149,22 @@ void UpdateGame()
 	Input::Update();
 
 
-	g_player.m_inputDir.Set(0.0f,0.0f);
+	g_player.m_input.Set(0.0f,0.0f);
 	if (Input::IsCurrDn(VK_LEFT))
 	{
-		g_player.m_inputDir.x = -1;
+		g_player.m_input.x = -1;
 	}
 	else if (Input::IsCurrDn(VK_RIGHT))
 	{
-		g_player.m_inputDir.x = 1;
+		g_player.m_input.x = 1;
 	}
 	if (Input::IsCurrDn(VK_UP))
 	{
-		g_player.m_inputDir.y = -1;
+		g_player.m_input.y = -1;
 	}
 	else if (Input::IsCurrDn(VK_DOWN))
 	{
-		g_player.m_inputDir.y = 1;
+		g_player.m_input.y = 1;
 	}
 	if (Input::IsTurnDn('O'))
 	{

@@ -22,31 +22,31 @@ void Object::Init(bool player)
 	}
 			
 
-	 m_isDead = false;
-	 m_moveDir.Set(0.0f,0.0f);		// 방향 벡터
+	 m_isDead = false;	
 	 m_moveDirPrev.Set(0.0f,0.0f);	// 이전 방향 벡터
-	 m_inputDir.Set(0.0f,0.0f);		// 입력 벡터	
+	 m_input.Set(0.0f,0.0f);		// 입력 벡터	
 }
 
 void Object::Update(float delta)
 {
 	// 입력 벡터를 Normalize 하여  방향 벡터로 변환
-	if (m_inputDir != Vector2(0.0f, 0.0f))
+	Vector2 moveDirection(0.0f, 0.0f);
+	if (m_input != Vector2(0.0f, 0.0f))
 	{
-		m_inputDir.Normalize();
-		m_moveDir = m_inputDir;
+		m_input.Normalize();
+		moveDirection = m_input;
 	}
 	else
 	{
-		m_moveDir = Vector2(0.0f, 0.0f);
+		moveDirection = Vector2(0.0f, 0.0f);
 	}	
 
-	m_posX += m_moveDir.x * m_speed * delta;
-	m_posY += m_moveDir.y * m_speed * delta;	
+	m_posX += moveDirection.x * m_speed * delta;
+	m_posY += moveDirection.y * m_speed * delta;
 
-	if (m_moveDir.x != 0.0f)
+	if (moveDirection.x != 0.0f)
 	{
-		m_AnimationFlip = m_moveDir.x < 0 ? true : false;
+		m_AnimationFlip = moveDirection.x < 0 ? true : false;
 	}
 
 	//공격 중이면 상태	변경하지 않는다.
@@ -54,16 +54,15 @@ void Object::Update(float delta)
 	{
 		if (m_moveDirPrev == Vector2(0.0f,0.0f))
 		{
-			if (m_moveDir != Vector2(0.0f, 0.0f))
+			if (moveDirection != Vector2(0.0f, 0.0f))
 				ChangeStatus(ObjectStatus::OBJECT_STATUS_MOVE);
 		}
 		else if (m_moveDirPrev != Vector2(0.0f, 0.0f))
 		{
-			if (m_moveDir == Vector2(0.0f, 0.0f))
+			if (moveDirection == Vector2(0.0f, 0.0f))
 				ChangeStatus(ObjectStatus::OBJECT_STATUS_IDLE);
 		}
 	}
-
 
 	// 화면 밖으로 나가지 않도록 처리
 	SIZE size = Render::GetScreenSize();
@@ -74,7 +73,7 @@ void Object::Update(float delta)
 		UpdateAnimation(delta);
 
 	// 이전 방향 벡터 저장
-	m_moveDirPrev = m_moveDir;
+	m_moveDirPrev = moveDirection;
 }
 
 void Object::Render()
